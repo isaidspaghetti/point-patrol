@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>Websocket tester</title>
+</head>
+<body>
+<div class="center">
+    <h1>Websocket Tester</h1>
+    <h3 id="chat-header">Enter game id</h3>
+
+    <form id="numberForm">
+        <label for="game">Game IDs (comma-separated):</label>
+        <input type ='string' id="game" name="game" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+
+    <div id="ws-messages">
+        <h2>Score</h2>
+        <p id="latestMessage">No score yet.</p>
+    </div>
+
+
+</div>
+
+<script>
+    // Function to handle form submission
+    document.getElementById('numberForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        const gameInput = document.getElementById('game').value;
+        const gameNumbers = gameInput.split(',').map(s => s.trim()).join(',');
+        const wsUrl = `ws://localhost:8080/ws?game=${gameNumbers}`;
+
+        // Open a WebSocket connection
+        const socket = new WebSocket(wsUrl);
+
+        // Listen for messages from the WebSocket
+        socket.addEventListener('message', function(event) {
+            displayLatestMessage(event.data);
+        });
+
+        // Listen for connection errors
+        socket.addEventListener('error', function(error) {
+            console.error('WebSocket Error:', error);
+            displayLatestMessage('WebSocket Error: Check console for details.');
+        });
+
+        // Listen for the connection to open
+        socket.addEventListener('open', function() {
+            console.log('WebSocket connection opened');
+            displayLatestMessage('WebSocket connection opened');
+        });
+
+        // Listen for the connection to close
+        socket.addEventListener('close', function() {
+            console.log('WebSocket connection closed');
+            displayLatestMessage('WebSocket connection closed');
+        });
+    });
+
+    // Function to display only the latest message
+    function displayLatestMessage(message) {
+        const latestMessage = document.getElementById('latestMessage');
+        latestMessage.textContent = message;
+    }
+</script>
+
+</body>
+</html>
