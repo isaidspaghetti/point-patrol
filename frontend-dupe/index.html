@@ -7,11 +7,11 @@
 <body>
 <div class="center">
     <h1>Websocket Tester</h1>
-    <h3 id="chat-header">Enter game id</h3>
+    <h3 id="chat-header">Enter  station ids</h3>
 
-    <form id="numberForm">
-        <label for="game">Game IDs (comma-separated):</label>
-        <input type ='string' id="game" name="game" required><br><br>
+    <form id="stationsInput">
+        <label for="station">station IDs (comma-separated):</label>
+        <input type ='text' id="stationIDs" name="station" required><br><br>
         <button type="submit">Submit</button>
     </form>
 
@@ -27,12 +27,12 @@
 
 <script>
     // Function to handle form submission
-    document.getElementById('numberForm').addEventListener('submit', function(event) {
+    document.getElementById('stationsInput').addEventListener('submit', function(event) {
         event.preventDefault();  // Prevent default form submission
 
-        const gameInput = document.getElementById('game').value;
-        const gameNumbers = gameInput.split(',').map(s => s.trim()).join(',');
-        const wsUrl = `ws://localhost:8080/ws?game=${gameNumbers}`;
+        const stationInput = document.getElementById('stationIDs').value;
+        const stationIDs = stationInput.split(',').map(s => s.trim()).join(',');
+        const wsUrl = `ws://localhost:8080/ws?stationIDs=${stationIDs}`;
 
         // Open a WebSocket connection
         const socket = new WebSocket(wsUrl);
