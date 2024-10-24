@@ -8,6 +8,7 @@ import (
 func main() {
 	// Start the polling
 	go StartPolling()
+
 	// Set up HTTP server and route
 	// Fake frontend for testing
 	http.Handle("/", http.FileServer(http.Dir("./frontend-dupe")))

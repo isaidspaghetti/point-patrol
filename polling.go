@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -31,12 +30,12 @@ func StartPolling() {
 				log.Println("Error fetching events:", err)
 				continue
 			}
-			broadcastEvents(events)
+			BroadcastEvents(events)
 		}
 	}
 }
 
-func fetchEvents() (*EventResponse, error) {
+func fetchEvents() ([]byte, error) {
 	// create new request
 	nbaURL := "https://allsportsapi2.p.rapidapi.com/api/basketball/matches/live"
 	req, err := http.NewRequest("GET", nbaURL, nil)
@@ -46,7 +45,7 @@ func fetchEvents() (*EventResponse, error) {
 
 	// Add required headers (manually)
 	req.Header.Add("x-rapidapi-host", "allsportsapi2.p.rapidapi.com")
-	req.Header.Add("x-rapidapi-key", "hidden")
+	req.Header.Add("x-rapidapi-key", "3a7ee1f2bemsha1fc0b8d2bc760bp1d78e8jsn2d555b06efd5")
 	// Add required headers (auto)
 	//    rapidAPIHost := "allsportsapi2.p.rapidapi.com"
 	//    rapidAPIKey := os.Getenv("RAPIDAPI_KEY")
@@ -65,47 +64,65 @@ func fetchEvents() (*EventResponse, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, err
+		return nil, fmt.Errorf("received non-200 status code: %d", resp.StatusCode)
 	}
 
 	// read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("received non-200 status code: %d, response: %s", resp.StatusCode, string(body))
+		return nil, fmt.Errorf("failed to read response body: %v", err)
 	}
+	return body, nil
+	//var events EventResponse
+	//if err := json.Unmarshal(body, &events); err != nil {
+	//	return nil, err
+	//}
+	//fmt.Printf("body: %s\n", body)
+	//
+	//fmt.Printf("EVENTS", &events)
+	//return &events, nil
 
-	var events EventResponse
-	if err := json.Unmarshal(body, &events); err != nil {
-		return nil, err
-	}
-	fmt.Printf("body: %s\n", body)
-
-	fmt.Printf("EVENTS", &events)
-	return &events, nil
 }
 
-func broadcastEvents(events *EventResponse) {
-	// process each event individually
-	if events == nil {
-		log.Println("No events from external api")
-		return
-	}
+//func broadcastEvents(events *EventResponse) {
+//	// process each event individually
+//	if events == nil {
+//		log.Println("No events from external api")
+//		return
+//	}
+//
+//	for _, event := range events.Events {
+//		eventData, err := json.Marshal(event)
+//		if err != nil {
+//			log.Println("Error serializing eventData:", err)
+//			continue
+//		}
+//
+//		// Extract team slugs from event
+//		eventTeamSlugs := map[string]bool{
+//			event.HomeTeam.Slug: true,
+//			event.AwayTeam.Slug: true,
+//		}
+//		fmt.Printf("team slugs: %v\n", eventTeamSlugs)
+//
+//		// Broadcast this event to relevant clients
+//		BroadcastEvent(eventData, eventTeamSlugs)
+//	}
+//}
 
-	for _, event := range events.Events {
-		eventData, err := json.Marshal(event)
-		if err != nil {
-			log.Println("Error serializing eventData:", err)
-			continue
-		}
-
-		// Extract team slugs from event
-		eventTeamSlugs := map[string]bool{
-			event.HomeTeam.Slug: true,
-			event.AwayTeam.Slug: true,
-		}
-		fmt.Printf("team slugs: %v\n", eventTeamSlugs)
-
-		// Broadcast this event to relevant clients
-		BroadcastEvent(eventData, eventTeamSlugs)
-	}
-}
+//func broadcastEvents(events []byte) {
+//	if len(events) == 0 {
+//		log.Println("No events from external API")
+//		return
+//	}
+//
+//	// Broadcast the raw JSON event data to clients
+//	clientsMutex.Lock()
+//	for client := range clients {
+//		err := client.Conn.WriteMessage(websocket.TextMessage, events)
+//		if err != nil {
+//			log.Printf("Error broadcasting to client: %v", err)
+//		}
+//	}
+//	clientsMutex.Unlock()
+//}

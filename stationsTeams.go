@@ -18,7 +18,7 @@ var stationToTeamMap = map[string]string{
 	"wzgc":  "atlanta-hawks",
 	"wtem":  "washington-wizards",
 	"wwl":   "new-orleans-pelicans",
-	"test":  "botafogo",
+	"test":  "kauno-zalgiris",
 }
 
 // stationsToTeamSlug retursn t5he team slug for a given station id
