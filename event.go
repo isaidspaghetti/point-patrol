@@ -1,7 +1,13 @@
 package main
 
+import "encoding/json"
+
+//type EventResponse struct {
+//	Events []GameEvent `json:"events"`
+//}
+
 type EventResponse struct {
-	Events []GameEvent `json:"events"`
+	Events []json.RawMessage `json:"events"`
 }
 
 type EventData struct {
@@ -10,12 +16,12 @@ type EventData struct {
 
 // Provide some structs to get our hometeam and awayteam slugs
 type GameEvent struct {
-	MatchID   string `json:"match_id"`
-	HomeTeam  Team   `json:"homeTeam"`
-	AwayTeam  Team   `json:"awayTeam"`
-	ID        int    `json:"id"`
-	Score     string `json:"score"`
-	EventTime string `json:"event_time"`
+	//MatchID   string `json:"match_id"`
+	HomeTeam Team `json:"homeTeam"`
+	AwayTeam Team `json:"awayTeam"`
+	ID       int  `json:"id"`
+	//Score     string `json:"score"`
+	//EventTime string `json:"event_time"`
 }
 
 type Team struct {
