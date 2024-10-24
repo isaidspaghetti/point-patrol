@@ -46,7 +46,7 @@ func fetchEvents() (*EventResponse, error) {
 
 	// Add required headers (manually)
 	req.Header.Add("x-rapidapi-host", "allsportsapi2.p.rapidapi.com")
-	req.Header.Add("x-rapidapi-key", "3a7ee1f2bemsha1fc0b8d2bc760bp1d78e8jsn2d555b06efd5")
+	req.Header.Add("x-rapidapi-key", "hidden")
 	// Add required headers (auto)
 	//    rapidAPIHost := "allsportsapi2.p.rapidapi.com"
 	//    rapidAPIKey := os.Getenv("RAPIDAPI_KEY")
